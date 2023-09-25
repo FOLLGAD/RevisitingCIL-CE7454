@@ -1,5 +1,7 @@
+import random
 import numpy as np
 from torchvision import datasets, transforms
+from utils.ops import Cutout
 from utils.toolkit import split_images_labels
 
 
@@ -72,12 +74,14 @@ def build_transform(is_train, args):
     if is_train:
         scale = (0.05, 1.0)
         ratio = (3. / 4., 4. / 3.)
+        num_holes = random.randint(1, 3)
         
         transform = [
             transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandAugment(),
             transforms.ToTensor(),
+            Cutout(num_holes, 16),
         ]
         return transform
 
