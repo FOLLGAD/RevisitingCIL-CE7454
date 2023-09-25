@@ -74,9 +74,9 @@ def build_transform(is_train, args):
         ratio = (3. / 4., 4. / 3.)
         
         transform = [
+            transforms.RandAugment(),
             transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
             transforms.RandomHorizontalFlip(p=0.5),
-            transforms.RandAugment(),
             transforms.ToTensor(),
         ]
         return transform

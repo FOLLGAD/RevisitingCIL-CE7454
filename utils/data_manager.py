@@ -39,6 +39,7 @@ class DataManager(object):
             raise ValueError("Unknown data source {}.".format(source))
 
         if mode == "train":
+            print([*self._train_trsf, *self._common_trsf])
             trsf = transforms.Compose([*self._train_trsf, *self._common_trsf])
         elif mode == "flip":
             trsf = transforms.Compose(
