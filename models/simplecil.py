@@ -12,7 +12,7 @@ from models.base import BaseLearner
 from utils.toolkit import target2onehot, tensor2numpy
 
 
-num_workers = 8
+num_workers = 2
 batch_size=128
 
 class Learner(BaseLearner):
@@ -24,7 +24,7 @@ class Learner(BaseLearner):
     def after_task(self):
         self._known_classes = self._total_classes
     
-    def replace_fc(self,trainloader, model, args):
+    def replace_fc(self, trainloader, model, args):
         model = model.eval()
         embedding_list = []
         label_list = []
@@ -63,7 +63,8 @@ class Learner(BaseLearner):
         test_dataset = data_manager.get_dataset(np.arange(0, self._total_classes), source="test", mode="test" )
         self.test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=num_workers)
 
-        train_dataset_for_protonet=data_manager.get_dataset(np.arange(self._known_classes, self._total_classes),source="train", mode="test", )
+        # train_dataset_for_protonet=data_manager.get_dataset(np.arange(self._known_classes, self._total_classes),source="train", mode="test", )
+        train_dataset_for_protonet=data_manager.get_dataset(np.arange(self._known_classes, self._total_classes),source="train", mode="train", )
         self.train_loader_for_protonet = DataLoader(train_dataset_for_protonet, batch_size=batch_size, shuffle=True, num_workers=num_workers)
 
         if len(self._multiple_gpus) > 1:
