@@ -78,7 +78,7 @@ def build_transform(is_train, args):
         
         transform = [
             transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
-            # transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandAugment(),
             transforms.ToTensor(),
             Cutout(num_holes, 16),
