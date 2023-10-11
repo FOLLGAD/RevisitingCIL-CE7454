@@ -3,6 +3,9 @@ def get_model(model_name, args):
     if name=="simplecil":
         from models.simplecil import Learner
         return Learner(args)
+    if name=="simplecil_focal":
+        from models.simplecil_focal import Learner
+        return Learner(args)
     elif name=="adam_finetune":
         from models.adam_finetune import Learner
         return Learner(args)
