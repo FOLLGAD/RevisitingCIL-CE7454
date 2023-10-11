@@ -110,7 +110,7 @@ class Learner(BaseLearner):
             self._network.train()  # Set network to training mode
             total_loss = 0.0
 
-            for i, (inputs, targets) in enumerate(train_loader):
+            for i, (_, inputs, targets) in enumerate(train_loader):
                 inputs, targets = inputs.to(self._device), targets.to(self._device)
                 
                 # Zero the parameter gradients
