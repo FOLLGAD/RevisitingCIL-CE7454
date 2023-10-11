@@ -77,7 +77,7 @@ def build_transform(is_train, args):
         num_holes = random.randint(1, 3)
         
         transform = [
-            # transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
+            transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
             # transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandAugment(),
             transforms.ToTensor(),
