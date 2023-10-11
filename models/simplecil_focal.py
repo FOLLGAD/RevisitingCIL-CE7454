@@ -58,6 +58,8 @@ class Learner(BaseLearner):
                 embedding=model.convnet(data)
                 embedding_list.append(embedding.cpu())
                 label_list.append(label.cpu())
+
+                
         embedding_list = torch.cat(embedding_list, dim=0)
         label_list = torch.cat(label_list, dim=0)
 
@@ -99,34 +101,3 @@ class Learner(BaseLearner):
     def _train(self, train_loader, test_loader, train_loader_for_protonet):
         self._network.to(self._device)
         self.replace_fc(train_loader_for_protonet, self._network, None)
-
-        # Initialize optimizer
-        optimizer = optim.SGD(self._network.parameters(), lr=0.01, momentum=0.9)  # Adjust as needed
-
-        # Number of epochs (adjust as needed)
-        num_epochs = 10
-
-        for epoch in range(num_epochs):
-            self._network.train()  # Set network to training mode
-            total_loss = 0.0
-
-            for i, (_, inputs, targets) in enumerate(train_loader):
-                inputs, targets = inputs.to(self._device), targets.to(self._device)
-                
-                # Zero the parameter gradients
-                optimizer.zero_grad()
-
-                # Forward
-                outputs = self._network(inputs)
-                
-                # Calculate loss
-                loss = self.criterion(outputs, targets)
-                total_loss += loss.item()
-
-                # Backward and optimize
-                loss.backward()
-                optimizer.step()
-
-            # Print average loss for the epoch
-            print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {total_loss/len(train_loader)}")
-
