@@ -6,16 +6,17 @@ from utils import factory
 from utils.data_manager import DataManager
 from utils.toolkit import count_parameters
 import os
+import matplotlib.pyplot as plt
 
 
 def train(args):
     seed_list = copy.deepcopy(args["seed"])
     device = copy.deepcopy(args["device"])
 
-    for seed in seed_list:
-        args["seed"] = seed
-        args["device"] = device
-        _train(args)
+    seed = seed_list[0]
+    args["seed"] = seed
+    args["device"] = device
+    return _train(args)
 
 
 def _train(args):
@@ -98,6 +99,17 @@ def _train(args):
 
             print('Average Accuracy (CNN):', sum(cnn_curve["top1"])/len(cnn_curve["top1"]))
             logging.info("Average Accuracy (CNN): {}".format(sum(cnn_curve["top1"])/len(cnn_curve["top1"])))
+
+    plt.figure(figsize=(10, 5))
+    plt.plot(cnn_curve["top1"], label='Top 1 Accuracy')
+    plt.plot(cnn_curve["top5"], label='Top 5 Accuracy')
+    plt.title('CNN Accuracy Curve')
+    plt.xlabel('Tasks')
+    plt.ylabel('Accuracy')
+    plt.legend()
+    plt.show()
+
+    return cnn_curve, nme_curve
 
     
 def _set_device(args):
