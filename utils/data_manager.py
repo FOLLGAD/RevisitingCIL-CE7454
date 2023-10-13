@@ -190,8 +190,9 @@ class DataManager(object):
 class DummyDataset(Dataset):
     def __init__(self, images, labels, trsf, use_path=False):
         assert len(images) == len(labels), "Data size error!"
-        self.images = images
-        self.labels = labels
+        # EMIL: duplicate dataset times 5
+        self.images = np.concatenate([[i] * 5 for i in images])
+        self.labels = np.concatenate([[l] * 5 for l in labels])
         self.trsf = trsf
         self.use_path = use_path
 
