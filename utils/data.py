@@ -79,13 +79,13 @@ def build_transform(is_train, args):
         transform = [
             transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
             transforms.RandomHorizontalFlip(p=0.5),
-            transforms.v2.ColorJitter(
+            transforms.ColorJitter(
                 brightness=63 / 255,
                 contrast=0.5,
                 saturation=0.5,
             ),
-            transforms.v2.RandomGrayscale(p=0.1),
-            transforms.v2.RandAugment(),
+            transforms.RandomGrayscale(p=0.1),
+            transforms.RandAugment(),
             transforms.ToTensor(),
             Cutout(num_holes, 16),
         ]
