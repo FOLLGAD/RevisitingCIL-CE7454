@@ -5,6 +5,59 @@ from utils.ops import Cutout
 from utils.toolkit import split_images_labels
 from setting import args as system_args
 
+
+def build_transform(is_train, args):
+    input_size = 224
+    resize_im = input_size > 32
+
+    if is_train:
+        scale = (0.3, 1.0)
+        ratio = (3. / 4., 4. / 3.)
+        num_holes = random.randint(1, 3)
+
+        size = int((256 / 224) * input_size)
+
+        trmap = {
+            "crop": transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
+            "flip": transforms.RandomHorizontalFlip(p=0.5),
+            "jitter": transforms.ColorJitter(
+                brightness=63 / 255,
+                contrast=0.1,
+                saturation=0.1,
+            ),
+            "rand": transforms.RandAugment(),
+            "cutout": Cutout(num_holes, 16),
+            "cutout72": Cutout(num_holes, 72),
+            "resize": transforms.Resize(size, interpolation=3),  # to maintain same ratio w.r.t. 224 images
+            "ccrop": transforms.CenterCrop(input_size),
+
+        }
+
+        augs = [*system_args["augs"]] if "augs" in system_args else []
+        cutout = "cutout" in augs
+
+        augmentations = [trmap[a] for a in augs if a != "cutout"]
+        
+        transform = [
+            *augmentations,
+            transforms.ToTensor(),
+        ]
+        if cutout:
+            transform.append(trmap["cutout"])
+
+        return transform
+
+    t = []
+    if resize_im:
+        size = int((256 / 224) * input_size)
+        t.append(
+            transforms.Resize(size, interpolation=3),  # to maintain same ratio w.r.t. 224 images
+        )
+        t.append(transforms.CenterCrop(input_size))
+    t.append(transforms.ToTensor())
+    
+    return t
+
 class iData(object):
     train_trsf = []
     test_trsf = []
@@ -67,53 +120,6 @@ class iCIFAR100(iData):
             test_dataset.targets
         )
 
-
-def build_transform(is_train, args):
-    input_size = 224
-    resize_im = input_size > 32
-
-    if is_train:
-        scale = (0.3, 1.0)
-        ratio = (3. / 4., 4. / 3.)
-        num_holes = random.randint(1, 3)
-
-        trmap = {
-            "crop": transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
-            "flip": transforms.RandomHorizontalFlip(p=0.5),
-            "jitter": transforms.ColorJitter(
-                brightness=63 / 255,
-                contrast=0.1,
-                saturation=0.1,
-            ),
-            "rand": transforms.RandAugment(),
-            "cutout": Cutout(num_holes, 16),
-        }
-
-        augs = [*system_args["augs"]] if "augs" in system_args else []
-        cutout = "cutout" in augs
-
-        augmentations = [trmap[a] for a in augs if a != "cutout"]
-        
-        transform = [
-            *augmentations,
-            transforms.ToTensor(),
-        ]
-        if cutout:
-            transform.append(trmap["cutout"])
-
-        return transform
-
-    t = []
-    if resize_im:
-        size = int((256 / 224) * input_size)
-        t.append(
-            transforms.Resize(size, interpolation=3),  # to maintain same ratio w.r.t. 224 images
-        )
-        t.append(transforms.CenterCrop(input_size))
-    t.append(transforms.ToTensor())
-    
-    # return transforms.Compose(t)
-    return t
 
 class iCIFAR224(iData):
     use_path = False
