@@ -183,7 +183,7 @@ class BaseNet(nn.Module):
             elif get_type(device) == "mps":
                     device = torch.device("mps")
             else:
-                device = torch.device("cuda:{}".format(device) if "cuda" not in device else device)
+                device = torch.device("cuda:{}".format(device) if "cuda" not in str(device) else device)
 
         self._device = device
 
