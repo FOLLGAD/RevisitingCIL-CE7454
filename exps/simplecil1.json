@@ -23,5 +23,9 @@
     "weight_decay": 0.005,
     "optimizer": "sgd",
     "vpt_type": "shallow",
-    "prompt_token_num": 3
+    "prompt_token_num": 3,
+    
+    "augs": [
+        "crop"
+    ]
 }
