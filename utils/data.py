@@ -92,10 +92,10 @@ def build_transform(is_train, args):
         augs = [*system_args["augs"]] if "augs" in system_args else []
         cutout = "cutout" in augs
 
-        augmentations = [trmap[a] for a in augs if a != "cutout"],
+        augmentations = [trmap[a] for a in augs if a != "cutout"]
         
         transform = [
-            *augs,
+            *augmentations,
             transforms.ToTensor(),
         ]
         if cutout:
