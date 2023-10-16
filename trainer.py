@@ -125,7 +125,7 @@ def _set_device(args):
         elif get_type(device) == "mps":
             device = torch.device("mps")
         else:
-            device = torch.device("cuda:{}".format(device))
+            device = torch.device("cuda:{}".format(device) if "cuda" not in device else device)
 
         gpus.append(device)
 
