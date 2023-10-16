@@ -116,9 +116,14 @@ def _set_device(args):
     device_type = args["device"]
     gpus = []
 
+    def get_type(d):
+        return d if isinstance(d, str) else d.type
+
     for device in device_type:
-        if device_type == -1:
+        if device_type == -1 or get_type(device) == "cpu":
             device = torch.device("cpu")
+        elif get_type(device) == "mps":
+            device = torch.device("mps")
         else:
             device = torch.device("cuda:{}".format(device))
 

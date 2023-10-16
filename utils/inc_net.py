@@ -172,6 +172,21 @@ class BaseNet(nn.Module):
     def __init__(self, args, pretrained):
         super(BaseNet, self).__init__()
 
+        device_type = args["device"]
+
+        def get_type(d):
+            return d if isinstance(d, str) else d.type
+
+        for device in device_type:
+            if device_type == -1 or get_type(device) == "cpu":
+                device = torch.device("cpu")
+            elif get_type(device) == "mps":
+                    device = torch.device("mps")
+            else:
+                device = torch.device("cuda:{}".format(device))
+
+        self._device = device
+
 
         print('This is for the BaseNet initialization.')
         self.convnet = get_convnet(args, pretrained)
@@ -507,7 +522,7 @@ class SimpleCosineIncrementalNet(BaseNet):
         super().__init__(args, pretrained)
 
     def update_fc(self, nb_classes, nextperiod_initialization=None):
-        fc = self.generate_fc(self.feature_dim, nb_classes).cuda()
+        fc = self.generate_fc(self.feature_dim, nb_classes).to(self._device)
         if self.fc is not None:
             nb_output = self.fc.out_features
             weight = copy.deepcopy(self.fc.weight.data)
@@ -515,7 +530,7 @@ class SimpleCosineIncrementalNet(BaseNet):
             if nextperiod_initialization is not None:
                 weight = torch.cat([weight, nextperiod_initialization])
             else:
-                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).cuda()])
+                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).to(self._device)])
             fc.weight = nn.Parameter(weight)
         del self.fc
         self.fc = fc
@@ -530,7 +545,7 @@ class SimpleVitNet(BaseNet):
         super().__init__(args, pretrained)
 
     def update_fc(self, nb_classes, nextperiod_initialization=None):
-        fc = self.generate_fc(self.feature_dim, nb_classes).cuda()
+        fc = self.generate_fc(self.feature_dim, nb_classes).to(self._device)
         if self.fc is not None:
             nb_output = self.fc.out_features
             weight = copy.deepcopy(self.fc.weight.data)
@@ -538,7 +553,7 @@ class SimpleVitNet(BaseNet):
             if nextperiod_initialization is not None:
                 weight = torch.cat([weight, nextperiod_initialization])
             else:
-                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).cuda()])
+                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self.feature_dim).to(self._device)])
             fc.weight = nn.Parameter(weight)
         del self.fc
         self.fc = fc
@@ -577,7 +592,7 @@ class MultiBranchCosineIncrementalNet(BaseNet):
             self.modeltype='vit'
 
     def update_fc(self, nb_classes, nextperiod_initialization=None):
-        fc = self.generate_fc(self._feature_dim, nb_classes).cuda()
+        fc = self.generate_fc(self._feature_dim, nb_classes).to(self._device)
         if self.fc is not None:
             nb_output = self.fc.out_features
             weight = copy.deepcopy(self.fc.weight.data)
@@ -585,7 +600,7 @@ class MultiBranchCosineIncrementalNet(BaseNet):
             if nextperiod_initialization is not None:
                 weight = torch.cat([weight, nextperiod_initialization])
             else:
-                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self._feature_dim).cuda()])
+                weight = torch.cat([weight, torch.zeros(nb_classes - nb_output, self._feature_dim).to(self._device)])
             fc.weight = nn.Parameter(weight)
         del self.fc
         self.fc = fc

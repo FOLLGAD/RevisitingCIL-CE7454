@@ -191,8 +191,9 @@ class DummyDataset(Dataset):
     def __init__(self, images, labels, trsf, use_path=False):
         assert len(images) == len(labels), "Data size error!"
         # EMIL: duplicate dataset times 2
-        self.images = np.concatenate([[i] * 2 for i in images])
-        self.labels = np.concatenate([[l] * 2 for l in labels])
+        times = 1
+        self.images = np.concatenate([[i] * times for i in images])
+        self.labels = np.concatenate([[l] * times for l in labels])
         self.trsf = trsf
         self.use_path = use_path
 
