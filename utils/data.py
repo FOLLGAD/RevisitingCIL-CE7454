@@ -75,19 +75,31 @@ def build_transform(is_train, args):
         scale = (0.3, 1.0)
         ratio = (3. / 4., 4. / 3.)
         num_holes = random.randint(1, 3)
-        
-        transform = [
-            transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
-            transforms.RandomHorizontalFlip(p=0.5),
-            transforms.ColorJitter(
+
+        trmap = {
+            "crop": transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
+            "flip": transforms.RandomHorizontalFlip(p=0.5),
+            "jitter": transforms.ColorJitter(
                 brightness=63 / 255,
                 contrast=0.1,
                 saturation=0.1,
             ),
-            transforms.RandAugment(),
+            "rand": transforms.RandAugment(),
+            "cutout": Cutout(num_holes, 16),
+        }
+
+        augs = [*args["augs"]] if "augs" in args else []
+        cutout = "cutout" in augs
+
+        augmentations = [a for a in augs if a != "cutout"],
+        
+        transform = [
+            *augs,
             transforms.ToTensor(),
-            Cutout(num_holes, 16),
         ]
+        if cutout:
+            transform.append(trmap["cutout"])
+
         return transform
 
     t = []
