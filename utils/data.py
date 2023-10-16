@@ -3,7 +3,7 @@ import numpy as np
 from torchvision import datasets, transforms
 from utils.ops import Cutout
 from utils.toolkit import split_images_labels
-
+from setting import args as system_args
 
 class iData(object):
     train_trsf = []
@@ -71,6 +71,7 @@ class iCIFAR100(iData):
 def build_transform(is_train, args):
     input_size = 224
     resize_im = input_size > 32
+
     if is_train:
         scale = (0.3, 1.0)
         ratio = (3. / 4., 4. / 3.)
@@ -88,7 +89,7 @@ def build_transform(is_train, args):
             "cutout": Cutout(num_holes, 16),
         }
 
-        augs = [*args["augs"]] if "augs" in args else []
+        augs = [*system_args["augs"]] if "augs" in system_args else []
         cutout = "cutout" in augs
 
         augmentations = [a for a in augs if a != "cutout"],
