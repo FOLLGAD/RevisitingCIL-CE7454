@@ -15,7 +15,7 @@
         1993
     ],
     
-    "model_name": "adam_adapter",
+    "model_name": "simplecil",
     "tuned_epoch": 0,
     "init_lr": 0.01,
     "min_lr": 1e-8,
