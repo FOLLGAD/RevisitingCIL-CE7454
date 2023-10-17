@@ -11,7 +11,7 @@ def build_transform(is_train, args):
     resize_im = input_size > 32
 
     if is_train:
-        scale = (0.3, 1.0)
+        scale = (0.05, 1.0)
         ratio = (3. / 4., 4. / 3.)
         num_holes = random.randint(1, 3)
 
