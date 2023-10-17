@@ -20,11 +20,8 @@ def build_transform(is_train, args):
         trmap = {
             "crop": transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
             "flip": transforms.RandomHorizontalFlip(p=0.5),
-            "jitter": transforms.ColorJitter(
-                brightness=63 / 255,
-                contrast=0.1,
-                saturation=0.1,
-            ),
+            "jitter": transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
+            "rotate": transforms.RandomRotation(15),
             "rand": transforms.RandAugment(),
             "cutout": Cutout(num_holes, 16),
             "cutout72": Cutout(num_holes, 72),
