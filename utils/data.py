@@ -30,11 +30,11 @@ def build_transform(is_train, args):
             "cutout72": Cutout(num_holes, 72),
             "resize": transforms.Resize(size, interpolation=3),  # to maintain same ratio w.r.t. 224 images
             "ccrop": transforms.CenterCrop(input_size),
-
         }
 
         augs = [*system_args["augs"]] if "augs" in system_args else []
         cutout = "cutout" in augs
+        cutout72 = "cutout72" in augs
 
         augmentations = [trmap[a] for a in augs if a != "cutout"]
         
@@ -44,6 +44,8 @@ def build_transform(is_train, args):
         ]
         if cutout:
             transform.append(trmap["cutout"])
+        if cutout72:
+            transform.append(trmap["cutout72"])
 
         return transform
 
