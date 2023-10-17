@@ -36,7 +36,7 @@ def build_transform(is_train, args):
         cutout = "cutout" in augs
         cutout72 = "cutout72" in augs
 
-        augmentations = [trmap[a] for a in augs if a != "cutout"]
+        augmentations = [trmap[a] for a in augs if "cutout" not in a]
         
         transform = [
             *augmentations,
