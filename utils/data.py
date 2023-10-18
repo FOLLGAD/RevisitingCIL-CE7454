@@ -79,7 +79,7 @@ def build_transform(is_train, args):
         pt = []
         m = {
             "flip": transforms.RandomHorizontalFlip(p=0.5),
-            "rotate": transforms.Rotation(15),
+            "rotate": transforms.RandomRotation(15),
             "randaug": transforms.RandAugment(),
             "jitter": transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
         }
