@@ -10,6 +10,8 @@ from torch.utils.data import DataLoader
 from utils.inc_net import IncrementalNet,SimpleCosineIncrementalNet,MultiBranchCosineIncrementalNet,SimpleVitNet
 from models.base import BaseLearner
 from utils.toolkit import target2onehot, tensor2numpy
+from args import args as sys_args
+from utils.focal_loss import FocalLoss
 
 # tune the model at first session with vpt, and then conduct simple shot.
 num_workers = 8
@@ -140,7 +142,12 @@ class Learner(BaseLearner):
                 inputs, targets = inputs.to(self._device), targets.to(self._device)
                 logits = self._network(inputs)["logits"]
 
-                loss = F.cross_entropy(logits, targets)
+                if sys_args.get("focal_loss", False):
+                    focal_loss = FocalLoss()
+                    loss = focal_loss(logits, targets)
+                else:
+                    loss = F.cross_entropy(logits, targets)
+
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()
