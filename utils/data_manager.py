@@ -39,7 +39,6 @@ class DataManager(object):
             raise ValueError("Unknown data source {}.".format(source))
 
         if mode == "train":
-            print([*self._train_trsf, *self._common_trsf])
             trsf = transforms.Compose([*self._train_trsf, *self._common_trsf])
         elif mode == "flip":
             trsf = transforms.Compose(
@@ -190,11 +189,8 @@ class DataManager(object):
 class DummyDataset(Dataset):
     def __init__(self, images, labels, trsf, use_path=False):
         assert len(images) == len(labels), "Data size error!"
-        # EMIL: duplicate dataset x times
-        from setting import args as system_args
-        times = int(system_args.get("duplicate", 1))
-        self.images = np.concatenate([[i] * times for i in images])
-        self.labels = np.concatenate([[l] * times for l in labels])
+        self.images = images
+        self.labels = labels
         self.trsf = trsf
         self.use_path = use_path
 

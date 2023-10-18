@@ -11,9 +11,6 @@ from utils.inc_net import IncrementalNet,SimpleCosineIncrementalNet,MultiBranchC
 from models.base import BaseLearner
 from utils.toolkit import target2onehot, tensor2numpy
 
-from setting import args as system_args
-from models.focal_loss import FocalLoss
-
 # tune the model at first session with vpt, and then conduct simple shot.
 num_workers = 8
 
@@ -135,7 +132,6 @@ class Learner(BaseLearner):
 
     def _init_train(self, train_loader, test_loader, optimizer, scheduler):
         prog_bar = tqdm(range(self.args['tuned_epoch']))
-        info = "Error: No epochs"
         for _, epoch in enumerate(prog_bar):
             self._network.train()
             losses = 0.0
@@ -144,12 +140,7 @@ class Learner(BaseLearner):
                 inputs, targets = inputs.to(self._device), targets.to(self._device)
                 logits = self._network(inputs)["logits"]
 
-                if system_args.get("use_focal", False):
-                    focal_loss = FocalLoss()
-                    loss = focal_loss(logits, targets)
-                else:
-                    loss = F.cross_entropy(logits, targets)
-
+                loss = F.cross_entropy(logits, targets)
                 optimizer.zero_grad()
                 loss.backward()
                 optimizer.step()

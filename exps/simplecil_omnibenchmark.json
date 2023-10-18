@@ -7,21 +7,18 @@
     "shuffle": true,
     "init_cls": 30,
     "increment": 30,
-    "convnet_type": "pretrained_vit_b16_224_in21k",
-    "device": [
-        "0"
-    ],
-    "seed": [
-        1993
-    ],
-    
     "model_name": "simplecil",
-    "tuned_epoch": 0,
-    "init_lr": 0.01,
-    "min_lr": 1e-8,
-    "batch_size": 256,
-    "weight_decay": 0.005,
-    "optimizer": "sgd",
-    "vpt_type": "shallow",
-    "prompt_token_num": 3
+    "convnet_type": "pretrained_vit_b16_224_in21k",
+    "device": ["0"],
+    "seed": [1993],
+    
+    "tuned_epoch":0,
+    "init_lr":0.01,
+    "batch_size":256,
+    "weight_decay":0.05,
+    "min_lr":1e-8,
+    "optimizer":"sgd",
+    "vpt_type":"shallow",
+    "prompt_token_num":3
 }
+
