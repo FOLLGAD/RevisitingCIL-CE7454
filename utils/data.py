@@ -83,7 +83,7 @@ def build_transform(is_train, args):
             "randaug": transforms.RandAugment(),
             "jitter": transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
         }
-        pt = [m[a] for a in sys_args if a in m]
+        pt = [m[a] for a in sys_args]
         
         transform = [
             transforms.RandomResizedCrop(input_size, scale=scale, ratio=ratio),
