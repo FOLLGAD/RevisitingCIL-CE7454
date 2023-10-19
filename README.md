@@ -1,3 +1,11 @@
+# Running
+
+Run this:
+
+```bash
+$ python main.py --config ./exps/good.json
+```
+
 # Revisiting Class-Incremental Learning with Pre-Trained Models: Generalizability and Adaptivity are All You Need
 <div align="center">
 
